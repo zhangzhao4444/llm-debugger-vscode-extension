@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 import { DebugLoopController } from "./DebugLoopController";
+import logger from "../logger";
+
+const log = logger.createSubLogger("DebugConfigurationProvider");
 
 export class DebugConfigurationProvider implements vscode.DebugConfigurationProvider {
   constructor(
@@ -17,6 +20,8 @@ export class DebugConfigurationProvider implements vscode.DebugConfigurationProv
       false,
     );
 
+    log.debug(`Debug configuration requested for type: ${config.type}, debugEnabled: ${debugEnabled}`);
+
     // LLDB specific
     config.stopOnTerminate = false;
 
@@ -27,6 +32,9 @@ export class DebugConfigurationProvider implements vscode.DebugConfigurationProv
       // Configure the debugger to stop on uncaught exceptions
       config.breakOnUncaughtExceptions = true;
       config.stopOnEntry = true;
+      log.debug("LLM Debugger enabled - configured breakOnUncaughtExceptions and stopOnEntry");
+    } else {
+      log.debug("LLM Debugger disabled");
     }
 
     return config;

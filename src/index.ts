@@ -25,10 +25,13 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   // Register the debug configuration provider for the llmDebugger
-  // TODO: Support other debuggers
-  context.subscriptions.push(
-    vscode.debug.registerDebugConfigurationProvider("node", new DebugConfigurationProvider(context, debugLoopController)),
-  );
+  // Support multiple debuggers
+  const debuggers = ["node", "python", "java", "cppdbg", "coreclr", "mono"];
+  for (const debuggerType of debuggers) {
+    context.subscriptions.push(
+      vscode.debug.registerDebugConfigurationProvider(debuggerType, new DebugConfigurationProvider(context, debugLoopController)),
+    );
+  }
 
   // Set up and register the sidebar (integrated into the Run and Debug panel)
   const sidebarProvider = new LlmDebuggerSidebarProvider(context, debugLoopController);

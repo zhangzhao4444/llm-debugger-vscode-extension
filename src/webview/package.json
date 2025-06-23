@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "description": "LLM Debugger Webview",
   "scripts": {
-    "build": "parcel build index.html --dist-dir out --cache-dir .parcel-cache",
-    "dev": "parcel watch index.html --watch-dir . --dist-dir out --cache-dir .parcel-cache"
+    "build": "vite build",
+    "dev": "vite"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "parcel": "^2.13.3"
+    "@vitejs/plugin-react": "^4.5.2",
+    "vite": "^5.4.1"
   }
 }

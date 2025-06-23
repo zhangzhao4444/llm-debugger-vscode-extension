@@ -68,10 +68,27 @@ export async function callLlm(
     messages.push({ role: "user", content: promptOrMessages });
   }
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  // Get API key from environment variables or VSCode settings
+  const apiKey = process.env.DEEPSEEK_API_KEY || 
+                 process.env.OPENAI_API_KEY || 
+                 vscode.workspace.getConfiguration('llmDebugger').get<string>('apiKey');
+
+  if (!apiKey) {
+    throw new Error(
+      'API Key is required. Please set one of the following:\n' +
+      '1. DEEPSEEK_API_KEY environment variable\n' +
+      '2. OPENAI_API_KEY environment variable\n' +
+      '3. llmDebugger.apiKey in VSCode settings'
+    );
+  }
+
+  const openai = new OpenAI({ 
+    apiKey: apiKey,
+    baseURL: "https://api.deepseek.com"
+  });
   const withTools = functions && functions.length > 0;
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "deepseek-chat",
     tools: withTools ? functions : undefined,
     messages,
     tool_choice: withTools ? "required" : undefined,
